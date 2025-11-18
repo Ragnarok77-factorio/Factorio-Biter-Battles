@@ -115,6 +115,9 @@ function CaptainTaskGroup.draw_captain_organization_gui(player, main_frame)
     bottom_flow.style.horizontal_align = 'center'
     bottom_flow.add({ type = 'button', name = 'cpt_task_leave_group', caption = 'Leave task group' })
 
+    if CaptainTaskGroup.team_organization_can_edit_all(player) then
+        bottom_flow.add({ type = 'button', name = 'cpt_task_force_popup_everyone', caption = 'Show popup for all', tooltip = 'Captain power only, force team organization tasks popup for all team members' })
+    end
     main_frame.add({ type = 'label', name = 'list_players_without_task' })
 
     -- Call update function to populate dynamic content
@@ -235,6 +238,10 @@ local function on_gui_click(event)
     elseif name == 'cpt_task_leave_group' then
         CaptainTaskGroup.remove_task_group(player, groupsOrganization)
         CaptainTaskGroup.update_all_captain_organization_gui()
+    elseif name == 'cpt_task_force_popup_everyone' then
+        for _, player in pairs(force.players) do
+            CaptainTaskGroup.draw_captain_organization_gui(player)
+        end
     elseif name:sub(1, 18) == 'cpt_task_set_name_' then
         -- For captains who can edit all
         local group_index = tonumber(name:sub(19))
